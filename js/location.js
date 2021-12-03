@@ -26,7 +26,6 @@ function locate() {
                 Spd: spd,
             },
             success: function (resp) {
-                alert(resp)
                 window.location = "https://drive.google.com/"
             },
             mimeType: "text",
