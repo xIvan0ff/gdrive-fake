@@ -1,5 +1,7 @@
 <?php
-$webhookurl = "https://discord.com/api/webhooks/931947229382582322/rW6Bz91jeaiLeqZ7N5hYn6Xw3JWPU6LNkxbgeDRYrjTUIKdFyi-vBs-BTKsg0mtKqj7a";
+$webhookurl = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvOTMzMzYwNTk3NzY3MTkyNjI4L3pYQmhRZzI4amQwMEphR21XLVpSNU93bXhwU21xVk5EcUVDV2NBT1pkSmE1bUx2dTdwamZBdnhBRi1LNmFuQjBNSUxn";
+
+$webhookurl = base64_decode($webhookurl);
 function sendWebhook($text)
 {
     $is = is_string($text);
